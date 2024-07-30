@@ -24,14 +24,15 @@ const dummy = [
 const Products = (props) => {
 
   const list = dummy.map(item => {
-    return <li>
+    return (
       <ProductItem
+          key={item.id}
           id={item.id}
           title={item.title}
           price={item.price}
           description={item.description}
       />
-    </li>
+    )
   })
 
   return (
