@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toggleActions } from "./toggle-slice";
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -45,6 +47,39 @@ const cartSlice = createSlice({
     }
 })
 
+
+export const sendData = (cart) => {
+    return async (dispatch) => {
+        dispatch(toggleActions.showNotification({
+            status: 'pending',
+            title: 'Sending...',
+            message: 'Sending cart Data!'
+        }));
+          
+        const sendRequest = async () => {
+            const res = await axios.put('https://api-calls-prep-default-rtdb.firebaseio.com/cart-http.json', cart);
+            const data = await res.data
+            console.log(data)
+        }
+        
+        try {
+            await sendRequest()
+
+            dispatch(toggleActions.showNotification({
+                status: 'success',
+                title: 'Success!',
+                message: 'Sent Data Successfully'
+            }));
+
+        } catch (error) {
+            dispatch(toggleActions.showNotification({
+                status: 'error',
+                title: 'Error',
+                message: 'Sending Data Failed'
+            }))
+        }
+    }
+}
 
 
 export const cartActions = cartSlice.actions;
